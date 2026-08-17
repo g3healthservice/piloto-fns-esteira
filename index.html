@@ -260,7 +260,7 @@ const SEED = [
 ];
 
 /* ---------- Estado persistente ---------- */
-const LSKEY="pilotoFNS_v2";
+const LSKEY="pilotoFNS_v3";
 let propostas=load();
 function load(){
   try{ const s=JSON.parse(localStorage.getItem(LSKEY)); if(s&&s.length) return s; }catch(e){}
