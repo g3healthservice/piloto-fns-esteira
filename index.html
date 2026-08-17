@@ -209,55 +209,54 @@
 
 <script>
 /* ---------- Esteira FNS (fase 0 → pagamento) ---------- */
-const STAGES = ["Cadastrada","Enviada","Análise de Mérito","Diligência","Aprovada",
-  "Portaria Publicada","Empenhada","Paga (Fundo a Fundo)","Concluída"];
-const PAY_INDEX = 7;
+const STAGES = ["Enviada","Análise de Mérito","Aprovada","Portaria Publicada","Empenhada","Paga (Fundo a Fundo)"];
+const PAY_INDEX = 5;
 
 /* ---------- Sementes (ordem alfabética por responsável) ---------- */
 const SEED = [
   { id:"guilherme-1", resp:"Guilherme", num:"63000763704202600", uf:"GO", mun:"Cabeceiras",
     ent:"Fundo Municipal de Saúde de Cabeceiras", cnpj:"08.351.513/0001-59",
     tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
-    acoes:"Busca ativa / APS", stage:2, statusTxt:"Enviada p/ Análise Técnica de Mérito",
+    acoes:"Busca ativa / APS", stage:1, statusTxt:"Em Análise Técnica de Mérito",
     data:"16/03/2026", historico:[], notas:"" },
 
   { id:"marcio-1", resp:"Marcio", num:"63000736598202600", uf:"PE", mun:"Paulista",
     ent:"Fundo Municipal de Saúde do Município do Paulista", cnpj:"09.251.115/0001-23",
     tipo:"PAP", valor:5000000, obj:"Custeio PAP",
-    acoes:"Proposta acompanhada via painel FNS", stage:2,
-    statusTxt:"Enviada p/ Análise Técnica de Mérito", data:"23/02/2026", historico:[], notas:"" },
+    acoes:"Proposta acompanhada via painel FNS", stage:1,
+    statusTxt:"Em Análise Técnica de Mérito", data:"23/02/2026", historico:[], notas:"" },
   { id:"marcio-2", resp:"Marcio", num:"63000799163202600", uf:"PE", mun:"Paulista",
     ent:"Fundo Municipal de Saúde do Município do Paulista", cnpj:"09.251.115/0001-23",
     tipo:"MAC", valor:7000000, obj:"Custeio MAC",
-    acoes:"Proposta acompanhada via painel FNS", stage:2,
-    statusTxt:"Enviada p/ Análise Técnica de Mérito", data:"30/04/2026", historico:[], notas:"" },
+    acoes:"Proposta acompanhada via painel FNS", stage:1,
+    statusTxt:"Em Análise Técnica de Mérito", data:"30/04/2026", historico:[], notas:"" },
 
   { id:"max-1", resp:"Max", num:"63000811452202600", uf:"MG", mun:"Tupaciguara",
     ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
     tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
     acoes:"II — Busca ativa p/ vacinação e controle de doenças transmissíveis (R$ 1.000.000)",
-    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+    stage:1, statusTxt:"Em Análise Técnica de Mérito", data:"06/07/2026", historico:[], notas:"" },
   { id:"max-2", resp:"Max", num:"63000726340202600", uf:"MG", mun:"Tupaciguara",
     ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
     tipo:"MAC", valor:1000000, obj:"Custeio da Média e Alta Complexidade",
     acoes:"VI — Média Complexidade (R$ 500 mil) + IV — Radioterapia / Transporte Sanitário (R$ 500 mil)",
-    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+    stage:1, statusTxt:"Em Análise Técnica de Mérito", data:"06/07/2026", historico:[], notas:"" },
   { id:"max-3", resp:"Max", num:"63000811542202600", uf:"MG", mun:"Tupaciguara",
     ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
     tipo:"MAC", valor:1000000, obj:"MAC — Programa Agora Tem Especialistas",
     acoes:"VI — Média Complexidade (R$ 500 mil) + II — Componente Cirúrgico / Outras Cirurgias (R$ 500 mil)",
-    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+    stage:1, statusTxt:"Em Análise Técnica de Mérito", data:"06/07/2026", historico:[], notas:"" },
 
   { id:"michel-1", resp:"Michel/Gerson", num:"63000756662202600", uf:"SP", mun:"Arujá",
     ent:"Fundo Municipal de Saúde de Arujá", cnpj:"12.828.423/0001-83",
     tipo:"PAP", valor:500000, obj:"Custeio da Atenção Primária à Saúde",
     acoes:"VI — Saúde da pessoa idosa (R$ 300 mil) + VIII — Outras Ações APS (R$ 200 mil) · Dirigente: Leonardo Santos dos Reis",
-    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"24/06/2026", historico:[], notas:"" },
+    stage:1, statusTxt:"Em Análise Técnica de Mérito", data:"24/06/2026", historico:[], notas:"" },
   { id:"michel-2", resp:"Michel/Gerson", num:"63000756668202600", uf:"SP", mun:"Arujá",
     ent:"Fundo Municipal de Saúde de Arujá", cnpj:"12.828.423/0001-83",
     tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
     acoes:"II — Busca ativa p/ vacinação (R$ 500 mil) + VIII — Outras Ações APS (R$ 500 mil) · Dirigente: Leonardo Santos dos Reis",
-    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"24/06/2026", historico:[], notas:"" },
+    stage:1, statusTxt:"Em Análise Técnica de Mérito", data:"24/06/2026", historico:[], notas:"" },
 ];
 
 /* ---------- Estado persistente ---------- */
