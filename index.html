@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Piloto FNS · Esteira de Propostas</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#16212e; --panel2:#1c2a3a; --line:#26364a;
+    --ink:#e9f0f7; --mut:#93a4b8; --brand:#2f81f7; --brand2:#1f6feb;
+    --ok:#2ea043; --warn:#d29922; --pay:#3fb950; --pap:#8957e5; --mac:#1f9ec4;
+    --chip:#22303f; --shadow:0 6px 22px rgba(0,0,0,.35); --danger:#e5534b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  a{color:var(--brand)}
+  header.top{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#12202f,#0f1720);
+    border-bottom:1px solid var(--line);padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  header.top h1{font-size:18px;margin:0;letter-spacing:.2px}
+  header.top .sub{color:var(--mut);font-size:12.5px}
+  .grow{flex:1}
+  .btn{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:9px;
+    padding:8px 12px;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .btn:hover{border-color:var(--brand);color:#fff}
+  .btn.primary{background:var(--brand2);border-color:var(--brand2);color:#fff}
+  .btn.sm{padding:4px 9px;font-size:12px}
+  .btn.danger:hover{border-color:var(--danger);color:#ffb3ae}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  .kpi .lbl{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .kpi .val{font-size:22px;font-weight:700;margin-top:4px}
+  .kpi .val small{font-size:13px;color:var(--mut);font-weight:500}
+  .funnel{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px}
+  .funnel .fstep{flex:1;min-width:92px;background:var(--panel);border:1px solid var(--line);
+    border-radius:9px;padding:9px 8px;text-align:center}
+  .funnel .fstep .n{font-size:19px;font-weight:700}
+  .funnel .fstep .t{font-size:10.5px;color:var(--mut);line-height:1.25;margin-top:2px}
+  .person{margin:26px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .person h2{font-size:16px;margin:0}
+  .person .meta{color:var(--mut);font-size:12.5px}
+  .person .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+    font-weight:700;color:#fff;font-size:13px;background:var(--brand2)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    margin-bottom:14px;box-shadow:var(--shadow)}
+  .card .head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+  .card .num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--mut)}
+  .card .val{margin-left:auto;font-size:19px;font-weight:700}
+  .badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;letter-spacing:.3px}
+  .badge.pap{background:rgba(137,87,229,.18);color:#c9a9ff;border:1px solid #5b3ea8}
+  .badge.mac{background:rgba(31,158,196,.16);color:#8fe0f4;border:1px solid #1f6f86}
+  .badge.outro{background:rgba(147,164,184,.16);color:#c3d0dd;border:1px solid #46566a}
+  .card .desc{color:var(--mut);font-size:13px;margin:8px 0 14px}
+  .card .desc b{color:var(--ink);font-weight:600}
+  .steira{display:flex;gap:0;overflow-x:auto;padding:4px 0 8px}
+  .stp{flex:1;min-width:82px;position:relative;text-align:center;cursor:pointer;padding-top:22px}
+  .stp:before{content:"";position:absolute;top:9px;left:0;right:0;height:3px;background:var(--line)}
+  .stp:first-child:before{left:50%}
+  .stp:last-child:before{right:50%}
+  .stp .dot{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:16px;height:16px;
+    border-radius:50%;background:var(--panel2);border:2px solid var(--line);z-index:2}
+  .stp .cap{font-size:10.5px;color:var(--mut);line-height:1.2;display:block;padding:0 2px}
+  .stp.done:before{background:var(--brand)}
+  .stp.done .dot{background:var(--brand);border-color:var(--brand)}
+  .stp.done .cap{color:var(--ink)}
+  .stp.cur .dot{background:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(47,129,247,.25)}
+  .stp.cur .cap{color:#fff;font-weight:700}
+  .stp.pay.done .dot,.stp.pay.cur .dot{background:var(--pay);border-color:var(--pay)}
+  .stp.pay.done:before{background:var(--pay)}
+  .stp:hover .cap{color:#fff}
+  .cardfoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;
+    border-top:1px solid var(--line);padding-top:12px}
+  .status{font-size:12.5px}
+  .status .pill{background:var(--chip);border:1px solid var(--line);border-radius:20px;padding:3px 10px;margin-left:6px}
+  .cardfoot .acts{margin-left:auto;display:flex;gap:8px}
+  textarea.notes{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    color:var(--ink);padding:8px;font:inherit;font-size:13px;resize:vertical;min-height:38px;margin-top:8px}
+  .hist{margin-top:8px;font-size:12px;color:var(--mut)}
+  .hist div{padding:2px 0}
+  .hist .stg{color:var(--ink)}
+  details.log summary{cursor:pointer;color:var(--brand);font-size:12.5px;margin-top:8px}
+  .empno{color:var(--mut);font-size:12px}
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(4,9,15,.7);z-index:50;display:none;
+    align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+  .overlay.on{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;width:100%;
+    max-width:640px;box-shadow:var(--shadow);padding:22px 24px}
+  .modal h3{margin:0 0 14px;font-size:17px}
+  .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form label{font-size:12px;color:var(--mut);display:block;margin-bottom:4px}
+  .form .full{grid-column:1/-1}
+  .form input,.form select,.form textarea{width:100%;background:var(--panel2);border:1px solid var(--line);
+    border-radius:8px;color:var(--ink);padding:9px 10px;font:inherit;font-size:14px}
+  .form textarea{resize:vertical;min-height:56px}
+  .modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+  @media print{
+    header.top{position:static} .btn,.acts,.overlay{display:none!important} body{background:#fff;color:#000}
+    .card,.kpi,.funnel .fstep{box-shadow:none}
+  }
+  @media(max-width:560px){ .form{grid-template-columns:1fr} }
+  /* Gate / login */
+  #gate{position:fixed;inset:0;z-index:100;background:radial-gradient(1200px 600px at 50% -10%,#16324e,#0b1420);
+    display:flex;align-items:center;justify-content:center;padding:24px}
+  #gate .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:420px;width:100%;
+    padding:28px 26px;box-shadow:var(--shadow);text-align:center}
+  #gate h2{margin:6px 0 2px;font-size:19px}
+  #gate p{color:var(--mut);font-size:13px;margin:0 0 18px}
+  #gate input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--ink);
+    padding:11px 12px;font-size:14px;margin-bottom:10px}
+  #gate .err{color:#ffb3ae;font-size:12.5px;min-height:16px;margin-bottom:8px}
+  #gate .foot{color:var(--mut);font-size:11.5px;margin-top:18px}
+  #app{display:none}
+  .lock{font-size:34px}
+  .invout{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;
+    word-break:break-all;margin-top:10px;color:#9fd0ff;display:none}
+  .invout.show{display:block}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="box">
+    <div class="lock">🔒</div>
+    <h2>Piloto FNS — Acesso restrito</h2>
+    <p>Cole seu <b>link de convite</b> ou a <b>chave de acesso</b> para entrar.</p>
+    <input id="gkey" placeholder="Cole o link ou a chave aqui" autocomplete="off">
+    <div class="err" id="gerr"></div>
+    <button class="btn primary" style="width:100%" onclick="gateSubmit()">Entrar</button>
+    <div class="foot">G3 Health Service · acesso interno · não indexado</div>
+  </div>
+</div>
+
+<div id="app">
+<header class="top">
+  <div>
+    <h1>Piloto FNS · Esteira de Propostas</h1>
+    <div class="sub">Acompanhamento fundo a fundo — da análise ao pagamento · <span id="lastsave">—</span></div>
+  </div>
+  <div class="grow"></div>
+  <button class="btn primary" onclick="openForm()">＋ Nova proposta</button>
+  <button class="btn" onclick="openConvite()">🔗 Convite</button>
+  <button class="btn" onclick="exportJSON()">Backup</button>
+  <button class="btn" onclick="document.getElementById('imp').click()">Importar</button>
+  <input id="imp" type="file" accept="application/json" style="display:none" onchange="importJSON(event)">
+  <button class="btn" onclick="window.print()">Imprimir</button>
+  <button class="btn danger" onclick="resetAll()">Restaurar padrão</button>
+</header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+  <div class="funnel" id="funnel"></div>
+  <div id="content"></div>
+</div>
+
+<!-- Modal criar/editar -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="mtitle">Nova proposta</h3>
+    <div class="form">
+      <input type="hidden" id="f_id">
+      <div><label>Responsável</label><input id="f_resp" placeholder="Ex.: Guilherme"></div>
+      <div><label>Nº da Proposta</label><input id="f_num" placeholder="17 dígitos"></div>
+      <div><label>Tipo</label><select id="f_tipo"><option>PAP</option><option>MAC</option><option>Outro</option></select></div>
+      <div><label>Valor (R$)</label><input id="f_valor" type="number" placeholder="1000000"></div>
+      <div><label>UF</label><input id="f_uf" placeholder="GO"></div>
+      <div><label>Município</label><input id="f_mun" placeholder="Cabeceiras"></div>
+      <div class="full"><label>Entidade</label><input id="f_ent" placeholder="Fundo Municipal de Saúde de..."></div>
+      <div><label>CNPJ</label><input id="f_cnpj" placeholder="00.000.000/0001-00"></div>
+      <div><label>Fase atual</label><select id="f_stage"></select></div>
+      <div class="full"><label>Objeto</label><input id="f_obj" placeholder="Custeio da Atenção Primária à Saúde"></div>
+      <div class="full"><label>Ações / detalhe</label><textarea id="f_acoes" placeholder="Ações e valores, dirigente, etc."></textarea></div>
+      <div><label>Situação origem FNS</label><input id="f_status" placeholder="Enviada / Em análise..."></div>
+      <div><label>Data (origem)</label><input id="f_data" placeholder="dd/mm/aaaa"></div>
+    </div>
+    <div class="foot">
+      <button class="btn" onclick="closeForm()">Cancelar</button>
+      <button class="btn primary" onclick="submitForm()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal gerar convite -->
+<div class="overlay" id="convite">
+  <div class="modal" style="max-width:520px">
+    <h3>🔗 Gerar acesso a este painel</h3>
+    <p style="color:var(--mut);font-size:13px;margin:0 0 14px">
+      Links abrem <b>este</b> painel. Trava de cortesia (o mesmo esquema dos seus outros painéis).</p>
+    <div class="form">
+      <div class="full"><label>Link permanente (seu — não compartilhe amplamente)</label>
+        <div class="invout show" id="permOut"></div></div>
+      <div><label>Convidado (opcional)</label><input id="c_nome" placeholder="Ex.: Secretaria X"></div>
+      <div><label>Validade</label><select id="c_dias">
+        <option value="1">1 dia</option><option value="3" selected>3 dias</option>
+        <option value="7">7 dias</option><option value="15">15 dias</option><option value="30">30 dias</option>
+      </select></div>
+      <div class="full invout" id="invOut"></div>
+    </div>
+    <div class="foot">
+      <button class="btn" onclick="closeConvite()">Fechar</button>
+      <button class="btn" onclick="copyText(document.getElementById('permOut').textContent)">Copiar permanente</button>
+      <button class="btn primary" onclick="gerarConvite()">Gerar convite temporário</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#app -->
+
+<script>
+/* ---------- Esteira FNS (fase 0 → pagamento) ---------- */
+const STAGES = ["Cadastrada","Enviada","Análise de Mérito","Diligência","Aprovada",
+  "Portaria Publicada","Empenhada","Paga (Fundo a Fundo)","Concluída"];
+const PAY_INDEX = 7;
+
+/* ---------- Sementes (ordem alfabética por responsável) ---------- */
+const SEED = [
+  { id:"guilherme-1", resp:"Guilherme", num:"63000763704202600", uf:"GO", mun:"Cabeceiras",
+    ent:"Fundo Municipal de Saúde de Cabeceiras", cnpj:"08.351.513/0001-59",
+    tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
+    acoes:"Busca ativa / APS", stage:2, statusTxt:"Enviada p/ Análise Técnica de Mérito",
+    data:"16/03/2026", historico:[], notas:"" },
+
+  { id:"marcio-1", resp:"Marcio", num:"63000736598202600", uf:"PE", mun:"Paulista",
+    ent:"Fundo Municipal de Saúde do Município do Paulista", cnpj:"09.251.115/0001-23",
+    tipo:"PAP", valor:5000000, obj:"Custeio PAP",
+    acoes:"Proposta acompanhada via painel FNS", stage:2,
+    statusTxt:"Enviada p/ Análise Técnica de Mérito", data:"23/02/2026", historico:[], notas:"" },
+  { id:"marcio-2", resp:"Marcio", num:"63000799163202600", uf:"PE", mun:"Paulista",
+    ent:"Fundo Municipal de Saúde do Município do Paulista", cnpj:"09.251.115/0001-23",
+    tipo:"MAC", valor:7000000, obj:"Custeio MAC",
+    acoes:"Proposta acompanhada via painel FNS", stage:2,
+    statusTxt:"Enviada p/ Análise Técnica de Mérito", data:"30/04/2026", historico:[], notas:"" },
+
+  { id:"max-1", resp:"Max", num:"63000811452202600", uf:"MG", mun:"Tupaciguara",
+    ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
+    tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
+    acoes:"II — Busca ativa p/ vacinação e controle de doenças transmissíveis (R$ 1.000.000)",
+    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+  { id:"max-2", resp:"Max", num:"63000726340202600", uf:"MG", mun:"Tupaciguara",
+    ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
+    tipo:"MAC", valor:1000000, obj:"Custeio da Média e Alta Complexidade",
+    acoes:"VI — Média Complexidade (R$ 500 mil) + IV — Radioterapia / Transporte Sanitário (R$ 500 mil)",
+    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+  { id:"max-3", resp:"Max", num:"63000811542202600", uf:"MG", mun:"Tupaciguara",
+    ent:"Fundo Municipal de Saúde", cnpj:"14.819.606/0001-68",
+    tipo:"MAC", valor:1000000, obj:"MAC — Programa Agora Tem Especialistas",
+    acoes:"VI — Média Complexidade (R$ 500 mil) + II — Componente Cirúrgico / Outras Cirurgias (R$ 500 mil)",
+    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"06/07/2026", historico:[], notas:"" },
+
+  { id:"michel-1", resp:"Michel/Gerson", num:"63000756662202600", uf:"SP", mun:"Arujá",
+    ent:"Fundo Municipal de Saúde de Arujá", cnpj:"12.828.423/0001-83",
+    tipo:"PAP", valor:500000, obj:"Custeio da Atenção Primária à Saúde",
+    acoes:"VI — Saúde da pessoa idosa (R$ 300 mil) + VIII — Outras Ações APS (R$ 200 mil) · Dirigente: Leonardo Santos dos Reis",
+    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"24/06/2026", historico:[], notas:"" },
+  { id:"michel-2", resp:"Michel/Gerson", num:"63000756668202600", uf:"SP", mun:"Arujá",
+    ent:"Fundo Municipal de Saúde de Arujá", cnpj:"12.828.423/0001-83",
+    tipo:"PAP", valor:1000000, obj:"Custeio da Atenção Primária à Saúde",
+    acoes:"II — Busca ativa p/ vacinação (R$ 500 mil) + VIII — Outras Ações APS (R$ 500 mil) · Dirigente: Leonardo Santos dos Reis",
+    stage:1, statusTxt:"Enviada (a confirmar no FNS)", data:"24/06/2026", historico:[], notas:"" },
+];
+
+/* ---------- Estado persistente ---------- */
+const LSKEY="pilotoFNS_v2";
+let propostas=load();
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(LSKEY)); if(s&&s.length) return s; }catch(e){}
+  return JSON.parse(JSON.stringify(SEED));
+}
+function save(){ localStorage.setItem(LSKEY,JSON.stringify(propostas));
+  document.getElementById('lastsave').textContent="Salvo "+new Date().toLocaleString('pt-BR'); }
+function byId(id){ return propostas.find(p=>p.id===id); }
+
+const BRL=v=>(+v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const todayBR=()=>new Date().toLocaleDateString('pt-BR');
+
+/* ---------- Render ---------- */
+function render(){
+  const content=document.getElementById('content'); content.innerHTML="";
+  const groups={};
+  propostas.forEach(p=>{ (groups[p.resp]=groups[p.resp]||[]).push(p); });
+  const keys=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  if(!keys.length){ content.innerHTML='<div class="empno" style="padding:30px 0">Nenhuma proposta. Clique em “＋ Nova proposta”.</div>'; }
+  keys.forEach(resp=>{
+    const arr=groups[resp];
+    const tot=arr.reduce((s,p)=>s+(+p.valor||0),0);
+    const g=document.createElement('div');
+    g.innerHTML=`<div class="person">
+        <div class="av">${(resp[0]||'?').toUpperCase()}</div>
+        <h2>${esc(resp)}</h2>
+        <div class="meta">· ${arr.length} proposta(s) · ${BRL(tot)} · ${esc(arr[0].mun)}/${esc(arr[0].uf)}</div>
+      </div>`;
+    content.appendChild(g);
+    arr.forEach(p=>content.appendChild(cardEl(p)));
+  });
+  renderKPIs(); renderFunnel(); save();
+}
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function cardEl(p){
+  const cur=+p.stage||0;
+  const el=document.createElement('div'); el.className="card";
+  const steps=STAGES.map((name,i)=>{
+    const cls=["stp"]; if(i<=cur)cls.push("done"); if(i===cur)cls.push("cur");
+    if(i===PAY_INDEX)cls.push("pay");
+    return `<div class="${cls.join(' ')}" onclick="setStage('${p.id}',${i})" title="${name}">
+        <span class="dot"></span><span class="cap">${name}</span></div>`;
+  }).join("");
+  const hist=(p.historico||[]).slice().reverse().map(h=>
+     `<div><span class="stg">${STAGES[h.etapa]}</span> — ${h.data}${h.obs?" · "+esc(h.obs):""}</div>`).join("")
+     || `<div class="empno">Sem movimentações registradas ainda.</div>`;
+  const tcls=({PAP:'pap',MAC:'mac'})[p.tipo]||'outro';
+  el.innerHTML=`
+    <div class="head">
+      <span class="badge ${tcls}">${esc(p.tipo)}</span>
+      <span class="num">${esc(p.num)}</span>
+      <span class="val">${BRL(p.valor)}</span>
+    </div>
+    <div class="desc"><b>${esc(p.ent)}</b> · ${esc(p.mun)}/${esc(p.uf)} · CNPJ ${esc(p.cnpj)}<br>
+      <b>${esc(p.obj)}</b>${p.acoes?" — "+esc(p.acoes):""}</div>
+    <div class="steira">${steps}</div>
+    <div class="cardfoot">
+      <div class="status">Fase atual:
+        <span class="pill">${STAGES[cur]}</span>
+        ${p.statusTxt?`<span class="pill">Origem FNS: ${esc(p.statusTxt)}${p.data?" ("+esc(p.data)+")":""}</span>`:""}
+      </div>
+      <div class="acts">
+        <button class="btn sm" onclick="openForm('${p.id}')">Editar</button>
+        <button class="btn sm danger" onclick="delProp('${p.id}')">Excluir</button>
+      </div>
+    </div>
+    <details class="log">
+      <summary>Histórico / anotações</summary>
+      <textarea class="notes" placeholder="Anotações (contato, protocolo, pendência, portaria nº...)"
+        onchange="saveNote('${p.id}',this.value)">${esc(p.notas)}</textarea>
+      <div class="hist">${hist}</div>
+    </details>`;
+  return el;
+}
+
+function setStage(id,i){
+  const p=byId(id); if(!p||p.stage===i) return;
+  p.stage=i; p.historico=p.historico||[]; p.historico.push({etapa:i,data:todayBR()});
+  save(); render();
+}
+function saveNote(id,v){ const p=byId(id); if(p){p.notas=v; save();} }
+function delProp(id){ const p=byId(id); if(!p)return;
+  if(confirm("Excluir a proposta "+p.num+" ("+p.resp+")?")){ propostas=propostas.filter(x=>x.id!==id); save(); render(); } }
+
+function renderKPIs(){
+  const total=propostas.reduce((s,p)=>s+(+p.valor||0),0);
+  const pagas=propostas.filter(p=>(+p.stage||0)>=PAY_INDEX);
+  const valPago=pagas.reduce((s,p)=>s+(+p.valor||0),0);
+  const tram=propostas.filter(p=>{const s=+p.stage||0;return s>=2&&s<PAY_INDEX;}).length;
+  const resps=new Set(propostas.map(p=>p.resp)).size;
+  const k=[
+    ["Propostas", propostas.length, `${resps} responsável(is)`],
+    ["Valor total", BRL(total), "somatório do piloto"],
+    ["Em tramitação", tram, "análise → empenho"],
+    ["Pagas", pagas.length, BRL(valPago)+" liberado"],
+  ];
+  document.getElementById('kpis').innerHTML=k.map(x=>
+    `<div class="kpi"><div class="lbl">${x[0]}</div><div class="val">${x[1]} <small>${x[2]}</small></div></div>`).join("");
+}
+function renderFunnel(){
+  const counts=STAGES.map((_,i)=>propostas.filter(p=>(+p.stage||0)===i).length);
+  document.getElementById('funnel').innerHTML=STAGES.map((name,i)=>
+    `<div class="fstep"><div class="n">${counts[i]}</div><div class="t">${name}</div></div>`).join("");
+}
+
+/* ---------- Formulário criar/editar ---------- */
+function fillStageSelect(){
+  document.getElementById('f_stage').innerHTML=STAGES.map((s,i)=>`<option value="${i}">${i}. ${s}</option>`).join("");
+}
+function openForm(id){
+  fillStageSelect();
+  const isEdit=!!id; document.getElementById('mtitle').textContent=isEdit?"Editar proposta":"Nova proposta";
+  const p=isEdit?byId(id):{tipo:"PAP",stage:1};
+  document.getElementById('f_id').value=isEdit?id:"";
+  const set=(k,v)=>document.getElementById(k).value=(v==null?"":v);
+  set('f_resp',p.resp); set('f_num',p.num); set('f_tipo',p.tipo||"PAP"); set('f_valor',p.valor);
+  set('f_uf',p.uf); set('f_mun',p.mun); set('f_ent',p.ent); set('f_cnpj',p.cnpj);
+  document.getElementById('f_stage').value=(p.stage!=null?p.stage:1);
+  set('f_obj',p.obj); set('f_acoes',p.acoes); set('f_status',p.statusTxt); set('f_data',p.data);
+  document.getElementById('overlay').classList.add('on');
+}
+function closeForm(){ document.getElementById('overlay').classList.remove('on'); }
+function submitForm(){
+  const g=k=>document.getElementById(k).value.trim();
+  const resp=g('f_resp')||"(sem responsável)";
+  const id=g('f_id');
+  const data={ resp, num:g('f_num'), tipo:g('f_tipo'), valor:+g('f_valor')||0,
+    uf:g('f_uf').toUpperCase(), mun:g('f_mun'), ent:g('f_ent'), cnpj:g('f_cnpj'),
+    stage:+document.getElementById('f_stage').value||0,
+    obj:g('f_obj'), acoes:g('f_acoes'), statusTxt:g('f_status'), data:g('f_data') };
+  if(id){ Object.assign(byId(id),data); }
+  else { data.id="p-"+Date.now().toString(36); data.historico=[]; data.notas=""; propostas.push(data); }
+  save(); render(); closeForm();
+}
+
+/* ---------- Ferramentas ---------- */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(propostas,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download="piloto-fns-backup-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+}
+function importJSON(ev){
+  const f=ev.target.files[0]; if(!f)return;
+  const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result);
+    if(Array.isArray(d)){ propostas=d; save(); render(); } else alert("JSON deve ser uma lista de propostas."); }
+    catch(e){ alert("Arquivo inválido."); } }; r.readAsText(f); ev.target.value="";
+}
+function resetAll(){ if(confirm("Restaurar a lista e as fases para o padrão inicial? (apaga suas edições locais)")){
+  propostas=JSON.parse(JSON.stringify(SEED)); save(); render(); } }
+
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeForm(); });
+document.getElementById('convite').addEventListener('click',e=>{ if(e.target.id==='convite') closeConvite(); });
+
+/* ================= GATE (trava de acesso · esquema G3ACCESSGATE, SALT g3hs-2026-a7) ================= */
+const GSALT="g3hs-2026-a7", GLSK="pilotoFNS_gate";
+function gck(p){var h=0,x=GSALT+p,i;for(i=0;i<x.length;i++){h=((h<<5)-h+x.charCodeAt(i))|0}return(h>>>0).toString(36)}
+function b64url(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function b64urlDec(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)))}
+function gEnc(o){var b=b64url(JSON.stringify(o));return b+'.'+gck(b)}
+function gValid(tok){
+  if(!tok||tok.indexOf('.')<0) return false;
+  var i=tok.lastIndexOf('.'), b=tok.slice(0,i), sum=tok.slice(i+1);
+  if(gck(b)!==sum) return false;
+  var o; try{ o=JSON.parse(b64urlDec(b)); }catch(e){ return false; }
+  if(o.perm===true) return true;
+  if(o.exp && Date.now()<o.exp) return true;
+  return false;
+}
+function gTokenFrom(str){ if(!str) return null; var m=String(str).match(/[#&?]k=([^&\s]+)/); return m?decodeURIComponent(m[1]):String(str).trim(); }
+function gGrant(tok){ try{localStorage.setItem(GLSK,tok)}catch(e){} }
+function gStored(){ try{return localStorage.getItem(GLSK)}catch(e){return null} }
+const GBASE=location.href.split('#')[0];
+const GPERM=gEnc({perm:true,n:"G3"});
+
+function gateEnter(){ document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block'; render(); }
+function gateSubmit(){
+  var tok=gTokenFrom(document.getElementById('gkey').value);
+  if(tok && gValid(tok)){ gGrant(tok); gateEnter(); }
+  else document.getElementById('gerr').textContent='Chave inválida ou expirada.';
+}
+document.getElementById('gkey').addEventListener('keydown',e=>{ if(e.key==='Enter') gateSubmit(); });
+
+function gateBoot(){
+  var htok=gTokenFrom(location.hash);
+  if(htok && gValid(htok)){ gGrant(htok); history.replaceState(null,'',GBASE); gateEnter(); return; }
+  var s=gStored();
+  if(s && gValid(s)){ gateEnter(); return; }
+  if(s) localStorage.removeItem(GLSK); // expirou
+  document.getElementById('gate').style.display='flex';
+}
+
+/* Gerador de acessos a ESTE painel */
+function openConvite(){ document.getElementById('permOut').textContent=GBASE+'#k='+GPERM;
+  document.getElementById('invOut').classList.remove('show');
+  document.getElementById('convite').classList.add('on'); }
+function closeConvite(){ document.getElementById('convite').classList.remove('on'); }
+function gerarConvite(){
+  var nome=document.getElementById('c_nome').value.trim();
+  var dias=parseInt(document.getElementById('c_dias').value,10)||3;
+  var exp=Date.now()+dias*86400000, payload={exp:exp,t:"rx"}; if(nome) payload.n=nome;
+  var url=GBASE+'#k='+gEnc(payload), venc=new Date(exp);
+  var dd=String(venc.getDate()).padStart(2,'0'), mm=String(venc.getMonth()+1).padStart(2,'0');
+  var box=document.getElementById('invOut');
+  box.innerHTML='<div style="color:var(--mut);margin-bottom:6px">Válido '+dias+' dia(s) · expira '+dd+'/'+mm+'/'+venc.getFullYear()+(nome?' · '+esc(nome):'')+'</div>'+esc(url)+
+    '<div style="margin-top:8px"><button class="btn sm" onclick="copyText(\''+url.replace(/'/g,"\\'")+'\')">📋 Copiar</button></div>';
+  box.classList.add('show');
+}
+function copyText(t){ navigator.clipboard.writeText(t).then(()=>{},()=>{
+  var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy')}catch(e){} ta.remove(); }); alert('Link copiado.'); }
+
+gateBoot();
+</script>
+</body>
+</html>
